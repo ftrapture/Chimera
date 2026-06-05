@@ -1,0 +1,29 @@
+/.vs/
+/build/
+/out/
+/artifacts/
+/Testing/
+*.user
+*.suo
+*.VC.db
+*.opensdf
+*.log
+*.tmp
+*.bak
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+*.exp
+
+# Local artifacts and temporary logs
+/chimera.log
+/chimera_launcher.log
+/chimera_stderr.txt
+/screenshot.png
+
+# Generated data and tools output
+/dataset/
+/replay_output/

@@ -1,0 +1,11 @@
+{
+  "name": "project-chimera",
+  "version-string": "0.1.0",
+  "description": "Public bootstrap for Project Chimera NTSR/FI runtime",
+  "builtin-baseline": "b1b19307e2d2ec1eefbdb7ea069de7d4bcd31f01",
+  "dependencies": [
+    "catch2",
+    "minhook",
+    "nlohmann-json"
+  ]
+}
