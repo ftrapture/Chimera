@@ -553,6 +553,13 @@ BOOL WINAPI HookedCreateProcessW(
     LPCWSTR lpCurrentDirectory,
     LPSTARTUPINFOW lpStartupInfo,
     LPPROCESS_INFORMATION lpProcessInformation) {
+    std::ostringstream start_stream;
+    start_stream << "HookedCreateProcessW entry. AppName: " 
+                 << (lpApplicationName ? NarrowAscii(lpApplicationName) : "null")
+                 << " CommandLine: " 
+                 << (lpCommandLine ? NarrowAscii(lpCommandLine) : "null");
+    chimera::common::LogInfo("runtime.hooks", start_stream.str());
+
     const bool was_suspended = (dwCreationFlags & CREATE_SUSPENDED) != 0;
     const DWORD flags = dwCreationFlags | CREATE_SUSPENDED;
 
@@ -567,6 +574,13 @@ BOOL WINAPI HookedCreateProcessW(
         lpCurrentDirectory,
         lpStartupInfo,
         lpProcessInformation);
+
+    std::ostringstream result_stream;
+    result_stream << "g_original_create_process_w returned: " << (result ? "TRUE" : "FALSE");
+    if (result == FALSE) {
+        result_stream << " GetLastError: " << ::GetLastError();
+    }
+    chimera::common::LogInfo("runtime.hooks", result_stream.str());
 
     if (result != FALSE && lpProcessInformation != nullptr) {
         HMODULE current_dll = nullptr;
@@ -611,6 +625,13 @@ BOOL WINAPI HookedCreateProcessA(
     LPCSTR lpCurrentDirectory,
     LPSTARTUPINFOA lpStartupInfo,
     LPPROCESS_INFORMATION lpProcessInformation) {
+    std::ostringstream start_stream;
+    start_stream << "HookedCreateProcessA entry. AppName: " 
+                 << (lpApplicationName ? lpApplicationName : "null")
+                 << " CommandLine: " 
+                 << (lpCommandLine ? lpCommandLine : "null");
+    chimera::common::LogInfo("runtime.hooks", start_stream.str());
+
     const bool was_suspended = (dwCreationFlags & CREATE_SUSPENDED) != 0;
     const DWORD flags = dwCreationFlags | CREATE_SUSPENDED;
 
