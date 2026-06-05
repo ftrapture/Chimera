@@ -26,6 +26,7 @@ add_library(
 
 target_include_directories(chimera_common PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_link_libraries(chimera_common PUBLIC nlohmann_json::nlohmann_json)
+target_compile_definitions(chimera_common PUBLIC CHIMERA_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 chimera_apply_project_options(chimera_common)
 
 add_library(

@@ -11,6 +11,7 @@
 #include <d3dcompiler.h>
 
 #include "common/time.h"
+#include "platform/win32/process_utils.h"
 
 namespace chimera::overlay {
 
@@ -150,7 +151,11 @@ D3D12_DEPTH_STENCIL_DESC DisabledDepthStencilDesc() {
 }  // namespace
 
 Result<void> OverlayRenderer::Initialize(ID3D12Device* device, const DXGI_FORMAT output_format) {
-    const auto shader_root = std::filesystem::path(CHIMERA_SOURCE_DIR) / "shaders" / "debug";
+    const auto shaders_dir_res = chimera::platform::win32::GetShadersDirectory();
+    if (!shaders_dir_res.ok()) {
+        return shaders_dir_res.status();
+    }
+    const auto shader_root = shaders_dir_res.value() / "debug";
     auto vs = CompileShaderFromFile(shader_root / "overlay_vs.hlsl", "VSMain", "vs_5_1");
     if (!vs.ok()) {
         return vs.status();

@@ -9,6 +9,7 @@
 
 #include "common/time.h"
 #include "common/log.h"
+#include "platform/win32/process_utils.h"
 
 namespace chimera::ml {
 
@@ -180,7 +181,11 @@ Result<void> NeuralSrPipeline::Initialize(ID3D12Device* device, const DXGI_FORMA
 }
 
 Result<void> NeuralSrPipeline::CreatePipelineObjects(ID3D12Device* device) {
-    const auto shader_root = std::filesystem::path(CHIMERA_SOURCE_DIR) / "shaders" / "ml";
+    const auto shaders_dir_res = chimera::platform::win32::GetShadersDirectory();
+    if (!shaders_dir_res.ok()) {
+        return shaders_dir_res.status();
+    }
+    const auto shader_root = shaders_dir_res.value() / "ml";
     
     auto pass1_cs = CompileShaderFromFile(shader_root / "neural_sr_pass1.hlsl", "CSMain", "cs_5_1");
     if (!pass1_cs.ok()) {

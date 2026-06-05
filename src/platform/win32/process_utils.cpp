@@ -253,4 +253,40 @@ std::vector<std::wstring> EnumerateProcessImageNames() {
     return result;
 }
 
+Result<std::filesystem::path> GetShadersDirectory() {
+    // 1. Try to resolve relative to the current DLL's directory (for portable releases)
+    HMODULE current_dll = nullptr;
+    static int s_anchor = 0;
+    if (::GetModuleHandleExW(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            reinterpret_cast<LPCWSTR>(&s_anchor),
+            &current_dll) != FALSE) {
+        
+        std::vector<wchar_t> buffer(MAX_PATH);
+        auto copied = ::GetModuleFileNameW(current_dll, buffer.data(), static_cast<DWORD>(buffer.size()));
+        while (copied == buffer.size()) {
+            buffer.resize(buffer.size() * 2U);
+            copied = ::GetModuleFileNameW(current_dll, buffer.data(), static_cast<DWORD>(buffer.size()));
+        }
+
+        if (copied > 0U) {
+            std::filesystem::path dll_dir = std::filesystem::path(buffer.data()).parent_path();
+            std::filesystem::path portable_shaders_dir = dll_dir / "shaders";
+            if (std::filesystem::exists(portable_shaders_dir)) {
+                return portable_shaders_dir;
+            }
+        }
+    }
+
+    // 2. Fall back to compile-time source directory (for development)
+#ifdef CHIMERA_SOURCE_DIR
+    std::filesystem::path dev_shaders_dir = std::filesystem::path(CHIMERA_SOURCE_DIR) / "shaders";
+    if (std::filesystem::exists(dev_shaders_dir)) {
+        return dev_shaders_dir;
+    }
+#endif
+
+    return Status::Error(ErrorCode::kNotFound, "Shaders directory not found.");
+}
+
 }  // namespace chimera::platform::win32

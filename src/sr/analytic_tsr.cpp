@@ -6,6 +6,7 @@
 #include <d3dcompiler.h>
 
 #include "common/time.h"
+#include "platform/win32/process_utils.h"
 
 namespace chimera::sr {
 
@@ -176,7 +177,11 @@ Result<void> AnalyticTsrPipeline::Initialize(ID3D12Device* device, const DXGI_FO
 }
 
 Result<void> AnalyticTsrPipeline::CreatePipelineObjects(ID3D12Device* device) {
-    const auto shader_root = std::filesystem::path(CHIMERA_SOURCE_DIR) / "shaders" / "sr";
+    const auto shaders_dir_res = chimera::platform::win32::GetShadersDirectory();
+    if (!shaders_dir_res.ok()) {
+        return shaders_dir_res.status();
+    }
+    const auto shader_root = shaders_dir_res.value() / "sr";
     auto accumulate_vs = CompileShaderFromFile(shader_root / "accumulate.hlsl", "VSMain", "vs_5_1");
     if (!accumulate_vs.ok()) {
         return accumulate_vs.status();

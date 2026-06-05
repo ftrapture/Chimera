@@ -48,6 +48,7 @@ struct ProcessProtectionInfo final {
 
 [[nodiscard]] chimera::common::Result<std::filesystem::path> GetExecutablePath();
 [[nodiscard]] chimera::common::Result<std::filesystem::path> GetExecutableDirectory();
+[[nodiscard]] chimera::common::Result<std::filesystem::path> GetShadersDirectory();
 [[nodiscard]] std::wstring GetCommandLineString();
 [[nodiscard]] bool IsDebuggerAttached() noexcept;
 [[nodiscard]] std::wstring QuoteCommandLineArgument(std::wstring_view value);

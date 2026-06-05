@@ -9,6 +9,7 @@
 
 #include "common/log.h"
 #include "common/time.h"
+#include "platform/win32/process_utils.h"
 
 namespace chimera::ofa {
 
@@ -191,7 +192,11 @@ Result<void> OpticalFlowPipeline::Initialize(ID3D12Device* device) {
 }
 
 Result<void> OpticalFlowPipeline::CreateComputePipelines(ID3D12Device* device) {
-    const auto shader_root = std::filesystem::path(CHIMERA_SOURCE_DIR) / "shaders" / "fg";
+    const auto shaders_dir_res = chimera::platform::win32::GetShadersDirectory();
+    if (!shaders_dir_res.ok()) {
+        return shaders_dir_res.status();
+    }
+    const auto shader_root = shaders_dir_res.value() / "fg";
 
     // Prefilter: 1 SRV (input color / parent luma), 1 UAV (output luma)
     CHIMERA_RETURN_IF_ERROR(CreateComputeRootSignature(device, 1U, 1U, prefilter_root_sig_));

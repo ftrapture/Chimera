@@ -8,6 +8,7 @@
 
 #include "common/log.h"
 #include "common/time.h"
+#include "platform/win32/process_utils.h"
 
 namespace chimera::fg {
 
@@ -191,7 +192,11 @@ Result<void> FrameInterpolationPipeline::Initialize(ID3D12Device* device, const 
 }
 
 Result<void> FrameInterpolationPipeline::CreatePipelines(ID3D12Device* device) {
-    const auto shader_root = std::filesystem::path(CHIMERA_SOURCE_DIR) / "shaders" / "fg";
+    const auto shaders_dir_res = chimera::platform::win32::GetShadersDirectory();
+    if (!shaders_dir_res.ok()) {
+        return shaders_dir_res.status();
+    }
+    const auto shader_root = shaders_dir_res.value() / "fg";
 
     // Warp: 5 SRVs (frameN, frameN1, fwd_flow, bwd_flow, confidence), 3 UAVs (warped_n, warped_n1, occ)
     CHIMERA_RETURN_IF_ERROR(CreateComputeRS(device, 5U, 3U, warp_root_sig_));

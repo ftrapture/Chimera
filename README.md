@@ -194,7 +194,7 @@ The ML module is designed around standard inference runtimes (TensorRT and ONNX 
 ### Building the Project
 1. Clone the repository and configure dependencies via `vcpkg`:
    ```powershell
-   git clone https://github.com/your-username/ProjectChimera.git
+   git clone https://github.com/ftrapture/Chimera.git
    cd ProjectChimera
    ```
 2. Configure CMake and build the project in Release mode:
