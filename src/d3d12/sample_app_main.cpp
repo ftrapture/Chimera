@@ -581,7 +581,7 @@ int RunSampleApp(HINSTANCE instance, const int show_command) {
         common::LogWarning("app", "Neural SR init failed: ", init_result.status().message, " — using Analytic TSR only.");
     }
 
-    bool use_neural_sr = false;  // F5 toggles this
+    bool use_neural_sr = false;  // F6 toggles this
 
     overlay::OverlayRenderer overlay_renderer{};
     if (const auto init_result = overlay_renderer.Initialize(device_context.device(), swap_chain.format()); !init_result.ok()) {
@@ -666,7 +666,7 @@ int RunSampleApp(HINSTANCE instance, const int show_command) {
                         enable_vsync = !enable_vsync;
                         common::LogInfo("app", "VSync: ", enable_vsync ? "ON" : "OFF");
                         break;
-                    case VK_F5:
+                    case VK_F6:
                         if (neural_sr_available) {
                             use_neural_sr = !use_neural_sr;
                             common::LogInfo("app", "Upscaler: ", use_neural_sr ? "Neural SR (DLSS)" : "Analytic TSR");

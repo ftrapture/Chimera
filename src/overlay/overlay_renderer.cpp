@@ -365,7 +365,7 @@ void OverlayRenderer::BuildGeometry(const OverlaySnapshot& snapshot) {
     EmitText(28.0F, y, line_signals_upper.c_str(), body, 2.0F); y += dy;
 
     char line_keys[80]{};
-    std::snprintf(line_keys, sizeof(line_keys), "F2:FI  F3:QUALITY  F4:VSYNC  F5:DLSS");
+    std::snprintf(line_keys, sizeof(line_keys), "F2:FI  F3:QUALITY  F4:VSYNC  F6:DLSS");
     EmitText(28.0F, y, line_keys, body, 2.0F);
 }
 
